@@ -10,6 +10,11 @@ public class RoomAvailabilityService : IRoomAvailabilityService
   }
   public void CheckAvailability()
   {
-    Console.WriteLine("Wybrano moduł sparawdzenia dostępności");
+    var availableRooms = _roomRepository.GetAvailableRooms(DateTime.Now, DateTime.Now.AddDays(7));
+    Console.WriteLine("Wybrano moduł sprawdzenia dostępności");
+    foreach (var room in availableRooms)
+    {
+      Console.WriteLine($"Pokój: {room.RoomNumber}, Pojemność: {room.Capacity}");
+    }
   }
 }

@@ -33,7 +33,7 @@ GO
 
 INSERT INTO Reservations (ReservationId, RoomId, PricePerNight, IsAvailable, StartDate, EndDate) VALUES
 -- Rezerwacje dla pokoju 1 (RoomId = 1)
-(1, 1, 150.00, 0, '2025-11-10', '2025-11-15'),
+(1, 1, 150.00, 0, '2025-10-10', '2025-10-15'),
 (2, 1, 165.50, 0, '2025-12-20', '2025-12-26'),
 
 -- Rezerwacje dla pokoju 2 (RoomId = 2)
