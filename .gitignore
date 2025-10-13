@@ -1,0 +1,12 @@
+# Ignore build output
+[Bb]in/
+[Oo]bj/
+
+# Ignore Visual Studio user-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore NuGet packages
+packages/
