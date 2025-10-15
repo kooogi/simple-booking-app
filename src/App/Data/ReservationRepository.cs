@@ -3,6 +3,8 @@ public interface IReservationRepository
 {
   bool CreateReservation(int roomNumber, int guestsNumber, DateTime startDate, DateTime endDate);
   List<(Reservation, Room)> reservationsHistory();
+  void ReservationRemoval(int reservationId);
+  void ReservationUpdate(int reservationId, DateTime startDate, DateTime endDate);
 }
 
 public class ReservationRepository : IReservationRepository
@@ -44,9 +46,9 @@ public class ReservationRepository : IReservationRepository
       }
     }
   }
-  public List<(Reservation,Room)> reservationsHistory()
+  public List<(Reservation, Room)> reservationsHistory()
   {
-    var allReservation = new List<(Reservation,Room)>();
+    var allReservation = new List<(Reservation, Room)>();
     using (var connection = new SqlConnection(_connectionString))
     {
       connection.Open();
@@ -75,5 +77,50 @@ public class ReservationRepository : IReservationRepository
       }
     }
     return allReservation;
+  }
+  public void ReservationRemoval(int reservationId)
+  {
+    using (var connection = new SqlConnection(_connectionString))
+    {
+      connection.Open();
+      const string query = "DELETE FROM Reservations WHERE ReservationId=@reservationId";
+
+      using var command = new SqlCommand(query, connection);
+      command.Parameters.AddWithValue("@reservationId", reservationId);
+
+
+      int rowsAffected = command.ExecuteNonQuery();
+      if (rowsAffected > 0)
+      {
+        Console.WriteLine("Pomyślnie usunięto rezerwacje");
+      }
+      else
+      {
+        Console.WriteLine("Nie udało się usunąć rezerwacje");
+      }
+    }
+  }
+  public void ReservationUpdate(int reservationId, DateTime startDate, DateTime endDate)
+  {
+    using (var connection = new SqlConnection(_connectionString))
+    {
+      connection.Open();
+      const string query = "UPDATE Reservations SET StartDate = @startDate, EndDate = @endDate WHERE ReservationId = @reservationId;";
+
+      using var command = new SqlCommand(query, connection);
+      command.Parameters.AddWithValue("@reservationId", reservationId);
+      command.Parameters.AddWithValue("@startDate", startDate);
+      command.Parameters.AddWithValue("@endDate", endDate);
+
+      int rowsAffected = command.ExecuteNonQuery();
+      if (rowsAffected > 0)
+      {
+        Console.WriteLine("Pomyślnie zaktualizowano rezerwacje");
+      }
+      else
+      {
+        Console.WriteLine("Nie udało się zaktualizować rezerwacje");
+      }
+    }
   }
 }
