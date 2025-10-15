@@ -13,7 +13,7 @@ public class ReservationService : IReservationService
   {
     var (guestsNumber, startDate, endDate) = _roomService.CheckAvailability();
 
-    Console.WriteLine("Wybierz z listy dostępnych opcji poprzez wpisanie numeru pokoju");
+    Console.WriteLine("Choose from the available options by entering the room number");
     string? availableOptionsInput = Console.ReadLine();
     int availableRoomOptions;
     if (int.TryParse(availableOptionsInput, out availableRoomOptions))
@@ -22,22 +22,22 @@ public class ReservationService : IReservationService
     }
     else
     {
-      Console.WriteLine("Niepoprawny format, proszę wybrać z listy poprzez wpisanie numeru pokoju");
+      Console.WriteLine("Invalid format, please choose from the list by entering the room number");
       return;
     }
   }
   public void showReservations()
   {
     var reservationList = _reservationRepository.reservationsHistory();
-    Console.WriteLine("Wszystkie rezerwacje:");
+    Console.WriteLine("All reservations:");
     foreach (var reservation in reservationList)
     {
-      Console.WriteLine($"Od: {reservation.Item1.StartDate:d}, Do: {reservation.Item1.EndDate:d}, Pokój: {reservation.Item2.RoomNumber}, Ilość gości: {reservation.Item1.GuestsNumber}, Wielkość Pokoju {reservation.Item2.Capacity}, Cena za noc: {reservation.Item2.PricePerNight}");
+      Console.WriteLine($"From: {reservation.Item1.StartDate:d}, To: {reservation.Item1.EndDate:d}, Room: {reservation.Item2.RoomNumber}, Number of guests: {reservation.Item1.GuestsNumber}, Room capacity: {reservation.Item2.Capacity}, Price per night: {reservation.Item2.PricePerNight}");
     }
   }
   public void EditReservation()
   {
-    Console.WriteLine("Wprowadź numer rezerwacji do edycji");
+    Console.WriteLine("Enter the reservation number to edit");
     string? roomNumberInput = Console.ReadLine();
     int reservationId;
     if (int.TryParse(roomNumberInput, out reservationId))
@@ -46,23 +46,23 @@ public class ReservationService : IReservationService
     }
     else
     {
-      Console.WriteLine("Niepoprawny format proszę wprowadzić liczbę");
+      Console.WriteLine("Invalid format, please enter a number");
     }
-    Console.WriteLine("Wprowadź daty przyjazdu (dd.MM.yyyy)");
+    Console.WriteLine("Enter check-in date (dd.MM.yyyy)");
     string? startDateInput = Console.ReadLine();
     DateTime startDate;
     if (startDateInput == null || !DateTime.TryParse(startDateInput, out startDate))
     {
-      Console.WriteLine("Nie wprowadzono poprawnego formatu daty (dd.MM.yyyy)");
+      Console.WriteLine("Invalid date format (dd.MM.yyyy)");
       return;
     }
 
-    Console.WriteLine("Wprowadź datę wyjazdu (dd.MM.yyyy)");
+    Console.WriteLine("Enter check-out date (dd.MM.yyyy)");
     string? endDateInput = Console.ReadLine();
     DateTime endDate;
     if (endDateInput == null || !DateTime.TryParse(endDateInput, out endDate))
     {
-      Console.WriteLine("Nie wprowadzono poprawnego formatu daty (dd.MM.yyyy)");
+      Console.WriteLine("Invalid date format (dd.MM.yyyy)");
       return;
     }
     _reservationRepository.ReservationUpdate(reservationId, startDate, endDate);
@@ -70,7 +70,7 @@ public class ReservationService : IReservationService
 
   public void DeleteReservation()
   {
-    Console.WriteLine("Wprowadź numer rezerwacji do usunięcia");
+    Console.WriteLine("Enter the reservation number to delete");
     string? roomNumberInput = Console.ReadLine();
     int reservationId;
     if (int.TryParse(roomNumberInput, out reservationId))
@@ -79,7 +79,7 @@ public class ReservationService : IReservationService
     }
     else
     {
-      Console.WriteLine("Niepoprawny format proszę wprowadzić liczbę");
+      Console.WriteLine("Invalid format, please enter a number");
     }
     _reservationRepository.ReservationRemoval(reservationId);
   }

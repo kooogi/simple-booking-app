@@ -36,12 +36,12 @@ public class ReservationRepository : IReservationRepository
       int rowsAffected = command.ExecuteNonQuery();
       if (rowsAffected > 0)
       {
-        Console.WriteLine("Pomyślnie dokonano rezerwacji");
+        Console.WriteLine("Reservation created successfully");
         return true;
       }
       else
       {
-        Console.WriteLine("Nie udało się dokonać rezerwacji");
+        Console.WriteLine("Failed to create reservation");
         return false;
       }
     }
@@ -92,11 +92,11 @@ public class ReservationRepository : IReservationRepository
       int rowsAffected = command.ExecuteNonQuery();
       if (rowsAffected > 0)
       {
-        Console.WriteLine("Pomyślnie usunięto rezerwacje");
+        Console.WriteLine("Reservation deleted successfully");
       }
       else
       {
-        Console.WriteLine("Nie udało się usunąć rezerwacje");
+        Console.WriteLine("Failed to delete reservation");
       }
     }
   }
@@ -115,11 +115,11 @@ public class ReservationRepository : IReservationRepository
       int rowsAffected = command.ExecuteNonQuery();
       if (rowsAffected > 0)
       {
-        Console.WriteLine("Pomyślnie zaktualizowano rezerwacje");
+        Console.WriteLine("Reservation updated successfully");
       }
       else
       {
-        Console.WriteLine("Nie udało się zaktualizować rezerwacje");
+        Console.WriteLine("Failed to update reservation");
       }
     }
   }

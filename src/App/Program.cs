@@ -40,11 +40,11 @@ if (connectionString == null)
 else
 {
   bool isRunning = true;
-  Console.WriteLine("Witamy  w systemie rezerwacji pokoi wybierz jedną z dostępnych opcji");
+  Console.WriteLine("Welcome to the room booking system, please choose one of the available options");
   while (isRunning)
   {
     
-    Console.WriteLine("1. Stwórz rezerwację | 2. Sprawdź dostępne pokoje | 3. Stwórz pokój | 4. Lista Rezerwacji | 5. Edycja Pokoju | 6. Edycja Rezerwacji | 7. Usuwanie Pokoju | 8. Usuwanie Rezerwacji | 9. Exit");
+    Console.WriteLine("1. Create Reservation | 2. Check Available Rooms | 3. Create Room | 4. List Reservations | 5. Edit Room | 6. Edit Reservation | 7. Delete Room | 8. Delete Reservation | 9. Exit");
     string? userInput = Console.ReadLine();
     int value;
     if (int.TryParse(userInput, out value))
@@ -139,7 +139,7 @@ else
     }
     else
     {
-      Console.WriteLine("Wprowadzona wartość nie jest cyfrą! Proszę ponownie dokonać wyboru");
+      Console.WriteLine("The entered value is not a number! Please make a choice again");
     }
     
   }

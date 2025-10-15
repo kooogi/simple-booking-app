@@ -64,11 +64,11 @@ public class RoomRepository : IRoomRepository
       int rowsAffected = command.ExecuteNonQuery();
       if (rowsAffected > 0)
       {
-        Console.WriteLine("Pomyślnie stworzono pokój");
+        Console.WriteLine("Room created successfully");
       }
       else
       {
-        Console.WriteLine("Nie udało się stworzyć pokoju");
+        Console.WriteLine("Failed to create room");
       }
     }
   }
@@ -89,11 +89,11 @@ public class RoomRepository : IRoomRepository
       int rowsAffected = command.ExecuteNonQuery();
       if (rowsAffected > 0)
       {
-        Console.WriteLine("Pomyślnie zaktualizowano pokój");
+        Console.WriteLine("Room updated successfully");
       }
       else
       {
-        Console.WriteLine("Nie udało się zaktualizować pokoju");
+        Console.WriteLine("Failed to update room");
       }
     }
   }
@@ -111,11 +111,11 @@ public class RoomRepository : IRoomRepository
       int rowsAffected = command.ExecuteNonQuery();
       if (rowsAffected > 0)
       {
-        Console.WriteLine("Pomyślnie usunięto pokój");
+        Console.WriteLine("Room deleted successfully");
       }
       else
       {
-        Console.WriteLine("Nie udało się usunąć pokoju");
+        Console.WriteLine("Failed to delete room");
       }
     }
   }
