@@ -2,6 +2,7 @@ using Microsoft.Data.SqlClient;
 public interface IReservationRepository
 {
   bool CreateReservation(int roomNumber, int guestsNumber, DateTime startDate, DateTime endDate);
+  List<(Reservation, Room)> reservationsHistory();
 }
 
 public class ReservationRepository : IReservationRepository
@@ -43,5 +44,36 @@ public class ReservationRepository : IReservationRepository
       }
     }
   }
+  public List<(Reservation,Room)> reservationsHistory()
+  {
+    var allReservation = new List<(Reservation,Room)>();
+    using (var connection = new SqlConnection(_connectionString))
+    {
+      connection.Open();
+      const string query = @"SELECT Reservations.StartDate, Reservations.EndDate, Rooms.RoomNumber, Reservations.GuestsNumber, Rooms.Capacity, Rooms.PricePerNight FROM Reservations JOIN Rooms ON Reservations.RoomId = Rooms.RoomId";
 
+      using var command = new SqlCommand(query, connection);
+
+      using var reader = command.ExecuteReader();
+      while (reader.Read())
+      {
+        var reservation = new Reservation
+        {
+          StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
+          EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
+          GuestsNumber = reader.GetInt32(reader.GetOrdinal("GuestsNumber"))
+        };
+
+        var room = new Room
+        {
+          RoomNumber = reader.GetInt32(reader.GetOrdinal("RoomNumber")).ToString(),
+          Capacity = reader.GetInt32(reader.GetOrdinal("Capacity")),
+          PricePerNight = reader.GetDecimal(reader.GetOrdinal("PricePerNight"))
+        };
+
+        allReservation.Add((reservation, room));
+      }
+    }
+    return allReservation;
+  }
 }

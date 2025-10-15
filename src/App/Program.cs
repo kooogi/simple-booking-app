@@ -46,7 +46,7 @@ else
   while (isRunning)
   {
     
-    Console.WriteLine("1. Stwórz rezerwację | 2. Sprawdź dostępne pokoje | 3. Stwórz pokój | 4. Exit");
+    Console.WriteLine("1. Stwórz rezerwację | 2. Sprawdź dostępne pokoje | 3. Stwórz pokój | 4. Lista Rezerwacji | 5. Exit");
     string? userInput = Console.ReadLine();
     int value;
     if (int.TryParse(userInput, out value))
@@ -84,6 +84,16 @@ else
           }
           break;
         case 4:
+          if (reservationService != null)
+          {
+            reservationService.showReservations();
+          }
+          else
+          {
+            Console.WriteLine("Reservation service is not available.");
+          }
+          break;
+        case 5:
           Console.WriteLine("Goodbye!");
           isRunning = false;
           break;
