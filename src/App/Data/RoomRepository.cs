@@ -2,7 +2,7 @@ using Microsoft.Data.SqlClient;
 
 public interface IRoomRepository
 {
-  List<Room> GetAvailableRooms(int questNumber, DateTime startDate, DateTime endDate);
+  List<Room> GetAvailableRooms(int questsNumber, DateTime startDate, DateTime endDate);
 }
 
 public class RoomRepository : IRoomRepository
@@ -13,7 +13,7 @@ public class RoomRepository : IRoomRepository
     _connectionString = connectionString;
   }
 
-  public List<Room> GetAvailableRooms(int questNumber, DateTime startDate, DateTime endDate)
+  public List<Room> GetAvailableRooms(int questsNumber, DateTime startDate, DateTime endDate)
   {
     var availableRooms = new List<Room>();
     using (var connection = new SqlConnection(_connectionString))
@@ -26,9 +26,9 @@ public class RoomRepository : IRoomRepository
                     SELECT RoomId
                     FROM Reservations
                     WHERE (StartDate < @endDate AND EndDate > @startDate))
-                    AND (Capacity >= @questNumber AND Capacity <= @questNumber+2)";
+                    AND (Capacity >= @questsNumber AND Capacity <= @questsNumber+2)";
       using var command = new SqlCommand(query, connection);
-      command.Parameters.AddWithValue("@questNumber", questNumber);
+      command.Parameters.AddWithValue("@questsNumber", questsNumber);
       command.Parameters.AddWithValue("@startDate", startDate);
       command.Parameters.AddWithValue("@endDate", endDate);
       using var reader = command.ExecuteReader();
@@ -37,8 +37,9 @@ public class RoomRepository : IRoomRepository
         var room = new Room
         {
           RoomId = reader.GetInt32(reader.GetOrdinal("RoomID")),
-          RoomNumber = reader.GetString(reader.GetOrdinal("RoomNumber")),
+          RoomNumber = reader.GetInt32(reader.GetOrdinal("RoomNumber")).ToString(),
           Capacity = reader.GetInt32(reader.GetOrdinal("Capacity")),
+          PricePerNight = reader.GetDecimal(reader.GetOrdinal("PricePerNight"))
         };
         availableRooms.Add(room);
       }

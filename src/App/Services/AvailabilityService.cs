@@ -1,4 +1,4 @@
-public interface IRoomAvailabilityService { (DateTime, DateTime) CheckAvailability(); }
+public interface IRoomAvailabilityService { (int, DateTime, DateTime) CheckAvailability(); }
 
 public class RoomAvailabilityService : IRoomAvailabilityService
 {
@@ -8,19 +8,19 @@ public class RoomAvailabilityService : IRoomAvailabilityService
   {
     _roomRepository = roomRepository;
   }
-  public (DateTime, DateTime) CheckAvailability()
+  public (int, DateTime, DateTime) CheckAvailability()
   {
     Console.WriteLine("Wprowadź liczbę gości");
-    string? questNumberInput = Console.ReadLine();
-    int questNumber;
-    if (int.TryParse(questNumberInput, out questNumber))
+    string? questsNumberInput = Console.ReadLine();
+    int questsNumber;
+    if (int.TryParse(questsNumberInput, out questsNumber))
     {
 
     }
     else
     {
       Console.WriteLine("Niepoprawny format proszę wprowadzić liczbę");
-      return (default, default);
+      return (default, default, default);
     }
     //Wprowadzanie dat
     Console.WriteLine("Wprowadź daty przyjazdu (dd.MM.yyyy)");
@@ -33,7 +33,7 @@ public class RoomAvailabilityService : IRoomAvailabilityService
     else
     {
       Console.WriteLine("Nie wprowadzono poprawnego formatu daty (dd.MM.yyyy)");
-      return (default, default);
+      return (default, default, default);
     }
     
     Console.WriteLine("Wprowadź datę wyjazdu (dd.MM.yyyy)");
@@ -46,16 +46,16 @@ public class RoomAvailabilityService : IRoomAvailabilityService
     else
     {
       Console.WriteLine("Nie wprowadzono poprawnego formatu daty (dd.MM.yyyy)");
-      return (default, default);
+      return (default, default, default);
     }
     
     //sprawdzenie dostępności pokoi na podstawie podanych dat
-    var availableRooms = _roomRepository.GetAvailableRooms(questNumber, startDate, endDate);
+    var availableRooms = _roomRepository.GetAvailableRooms(questsNumber, startDate, endDate);
     Console.WriteLine("Dostępne pokoje");
     foreach (var room in availableRooms)
     {
-      Console.WriteLine($"Pokój: {room.RoomNumber}, Pojemność: {room.Capacity}");
+      Console.WriteLine($"Pokój: {room.RoomNumber}, Pojemność: {room.Capacity}, Cena za noc: {room.PricePerNight} PLN");
     }
-    return (startDate, endDate);
+    return (questsNumber, startDate, endDate);
   }
 }

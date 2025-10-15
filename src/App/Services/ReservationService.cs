@@ -11,14 +11,14 @@ public class ReservationService : IReservationService
   }
   public void ProcessReservation()
   {
-    var (startDate, endDate) = _availabilityService.CheckAvailability();
+    var (guestsNumber, startDate, endDate) = _availabilityService.CheckAvailability();
 
     Console.WriteLine("Wybierz z listy dostępnych opcji poprzez wpisanie numeru pokoju");
     string? availableOptionsInput = Console.ReadLine();
-    int availableOptions;
-    if (int.TryParse(availableOptionsInput, out availableOptions))
+    int availableRoomOptions;
+    if (int.TryParse(availableOptionsInput, out availableRoomOptions))
     {
-      _reservationRepository.CreateReservation(availableOptions , startDate, endDate);
+      _reservationRepository.CreateReservation(availableRoomOptions, guestsNumber, startDate, endDate);
     }
     else
     {
