@@ -1,10 +1,10 @@
-public interface IRoomAvailabilityService { (int, DateTime, DateTime) CheckAvailability(); }
+public interface IRoomService { (int, DateTime, DateTime) CheckAvailability(); void CreateRoom(); void EditRoom(); void DeleteRoom(); }
 
-public class RoomAvailabilityService : IRoomAvailabilityService
+public class RoomService : IRoomService
 {
   private readonly IRoomRepository _roomRepository;
 
-  public RoomAvailabilityService(IRoomRepository roomRepository)
+  public RoomService(IRoomRepository roomRepository)
   {
     _roomRepository = roomRepository;
   }
@@ -28,27 +28,27 @@ public class RoomAvailabilityService : IRoomAvailabilityService
     DateTime startDate;
     if (startDateInput != null && DateTime.TryParse(startDateInput, out startDate))
     {
-      
+
     }
     else
     {
       Console.WriteLine("Nie wprowadzono poprawnego formatu daty (dd.MM.yyyy)");
       return (default, default, default);
     }
-    
+
     Console.WriteLine("Wprowadź datę wyjazdu (dd.MM.yyyy)");
     string? endDateInput = Console.ReadLine();
     DateTime endDate;
     if (endDateInput != null && DateTime.TryParse(endDateInput, out endDate))
     {
-      
+
     }
     else
     {
       Console.WriteLine("Nie wprowadzono poprawnego formatu daty (dd.MM.yyyy)");
       return (default, default, default);
     }
-    
+
     //sprawdzenie dostępności pokoi na podstawie podanych dat
     var availableRooms = _roomRepository.GetAvailableRooms(questsNumber, startDate, endDate);
     Console.WriteLine("Dostępne pokoje");
@@ -58,4 +58,8 @@ public class RoomAvailabilityService : IRoomAvailabilityService
     }
     return (questsNumber, startDate, endDate);
   }
+
+  public void CreateRoom() { }
+  public void EditRoom() { }
+  public void DeleteRoom() { }
 }

@@ -16,8 +16,7 @@ string? connectionString = config.GetConnectionString("DefaultConnection");
 // Set up dependency injection container
 var services = new ServiceCollection();
 services.AddTransient<IReservationService, ReservationService>();
-services.AddTransient<IRoomAvailabilityService, RoomAvailabilityService>();
-services.AddTransient<IRoomCreationService, RoomCreationService>();
+services.AddTransient<IRoomService, RoomService>();
 
 if (connectionString == null)
 {
@@ -31,8 +30,7 @@ var serviceProvider = services.BuildServiceProvider();
 
 // Retrieve the reservation service instance
 var reservationService = serviceProvider.GetService<IReservationService>();
-var roomAvailabilityService = serviceProvider.GetService<IRoomAvailabilityService>();
-var roomCreationService = serviceProvider.GetService<IRoomCreationService>();
+var roomService = serviceProvider.GetService<IRoomService>();
 
 
 if (connectionString == null)
@@ -46,7 +44,7 @@ else
   while (isRunning)
   {
     
-    Console.WriteLine("1. Stwórz rezerwację | 2. Sprawdź dostępne pokoje | 3. Stwórz pokój | 4. Lista Rezerwacji | 5. Exit");
+    Console.WriteLine("1. Stwórz rezerwację | 2. Sprawdź dostępne pokoje | 3. Stwórz pokój | 4. Lista Rezerwacji | 5. Edycja Pokoju | 6. Edycja Rezerwacji | 7. Usuwanie Pokoju | 8. Usuwanie Rezerwacji | 9. Exit");
     string? userInput = Console.ReadLine();
     int value;
     if (int.TryParse(userInput, out value))
@@ -64,9 +62,9 @@ else
           }
           break;
         case 2:
-          if (roomAvailabilityService != null)
+          if (roomService != null)
           {
-            roomAvailabilityService.CheckAvailability();
+            roomService.CheckAvailability();
           }
           else
           {
@@ -74,9 +72,9 @@ else
           }
           break;
         case 3:
-          if (roomCreationService != null)
+          if (roomService != null)
           {
-            roomCreationService.CreateRoom();
+            roomService.CreateRoom();
           }
           else
           {
@@ -94,6 +92,46 @@ else
           }
           break;
         case 5:
+          if (roomService != null)
+          {
+            roomService.EditRoom();
+          }
+          else
+          {
+            Console.WriteLine("Reservation service is not available.");
+          }
+          break;
+        case 6:
+          if (reservationService != null)
+          {
+            reservationService.EditReservation();
+          }
+          else
+          {
+            Console.WriteLine("Reservation service is not available.");
+          }
+          break;
+        case 7:
+          if (roomService != null)
+          {
+            roomService.DeleteRoom();
+          }
+          else
+          {
+            Console.WriteLine("Reservation service is not available.");
+          }
+          break;
+        case 8:
+          if (reservationService != null)
+          {
+            reservationService.DeleteReservation();
+          }
+          else
+          {
+            Console.WriteLine("Reservation service is not available.");
+          }
+          break;
+        case 9:
           Console.WriteLine("Goodbye!");
           isRunning = false;
           break;

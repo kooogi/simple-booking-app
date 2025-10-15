@@ -1,19 +1,17 @@
-using System.Runtime.CompilerServices;
-
-public interface IReservationService { void ProcessReservation(); void showReservations(); }
+public interface IReservationService { void ProcessReservation(); void showReservations(); void EditReservation(); void DeleteReservation(); }
 
 public class ReservationService : IReservationService
 {
   private readonly IReservationRepository _reservationRepository;
-  private readonly IRoomAvailabilityService  _availabilityService;
-  public ReservationService(IReservationRepository reservationRepository, IRoomAvailabilityService  availabilityService)
+  private readonly IRoomService  _roomService;
+  public ReservationService(IReservationRepository reservationRepository, IRoomService  roomService)
   {
     _reservationRepository = reservationRepository;
-    _availabilityService = availabilityService;
+    _roomService = roomService;
   }
   public void ProcessReservation()
   {
-    var (guestsNumber, startDate, endDate) = _availabilityService.CheckAvailability();
+    var (guestsNumber, startDate, endDate) = _roomService.CheckAvailability();
 
     Console.WriteLine("Wybierz z listy dostępnych opcji poprzez wpisanie numeru pokoju");
     string? availableOptionsInput = Console.ReadLine();
@@ -30,11 +28,8 @@ public class ReservationService : IReservationService
   }
   public void showReservations()
   {
-    var reservationList = _reservationRepository.reservationsHistory();
-    Console.WriteLine("Wszystkie rezerwacje:");
-    foreach (var reservation in reservationList)
-    {
-      Console.WriteLine($"Od: {reservation.Item1.StartDate:d}, Do: {reservation.Item1.EndDate:d}, Pokój: {reservation.Item2.RoomNumber}, Ilość gości: {reservation.Item1.GuestsNumber}, Wielkość Pokoju {reservation.Item2.Capacity}, Cena za noc: {reservation.Item2.PricePerNight}");
-    }
+
   }
+  public void EditReservation() { }
+  public void DeleteReservation(){}
 }
