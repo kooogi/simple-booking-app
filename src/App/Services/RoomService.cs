@@ -59,7 +59,80 @@ public class RoomService : IRoomService
     return (questsNumber, startDate, endDate);
   }
 
-  public void CreateRoom() { }
-  public void EditRoom() { }
-  public void DeleteRoom() { }
+  public void CreateRoom()
+  {
+    var (roomNumber, roomCapacity, roomPrice) = RoomCreateEditUI();
+    _roomRepository.RoomRegistration(roomNumber, roomCapacity, roomPrice);
+  }
+  public void EditRoom()
+  {
+    Console.WriteLine("Wprowadź aktualny numer pokoju");
+    string? roomNumberInput = Console.ReadLine();
+    int oldRoomNumber;
+    if (int.TryParse(roomNumberInput, out oldRoomNumber))
+    {
+
+    }
+    else
+    {
+      Console.WriteLine("Niepoprawny format proszę wprowadzić liczbę");
+    }
+    var (newRoomNumber, roomCapacity, roomPrice) = RoomCreateEditUI();
+    _roomRepository.RoomUpdate(oldRoomNumber, newRoomNumber, roomCapacity, roomPrice);
+  }
+  public void DeleteRoom()
+  {
+    Console.WriteLine("Wprowadź numer pokoju do usunięcia");
+    string? roomNumberInput = Console.ReadLine();
+    int roomNumber;
+    if (int.TryParse(roomNumberInput, out roomNumber))
+    {
+
+    }
+    else
+    {
+      Console.WriteLine("Niepoprawny format proszę wprowadzić liczbę");
+    }
+    _roomRepository.RoomRemoval(roomNumber);
+  }
+
+  private (int, int, int) RoomCreateEditUI()
+  {
+    Console.WriteLine("Wprowadź numer pokoju");
+    string? roomNumberInput = Console.ReadLine();
+    int roomNumber;
+    if (int.TryParse(roomNumberInput, out roomNumber))
+    {
+
+    }
+    else
+    {
+      Console.WriteLine("Niepoprawny format proszę wprowadzić liczbę");
+    }
+
+    Console.WriteLine("Wielkość pokoju");
+    string? roomCapacityInput = Console.ReadLine();
+    int roomCapacity;
+    if (int.TryParse(roomCapacityInput, out roomCapacity))
+    {
+
+    }
+    else
+    {
+      Console.WriteLine("Niepoprawny format proszę wprowadzić liczbę");
+    }
+    Console.WriteLine("Cena za noc:");
+    string? roomPriceInput = Console.ReadLine();
+    int roomPrice;
+    if (int.TryParse(roomPriceInput, out roomPrice))
+    {
+
+    }
+    else
+    {
+      Console.WriteLine("Niepoprawny format proszę wprowadzić liczbę");
+    }
+
+    return (roomNumber, roomCapacity, roomPrice);
+  }
 }

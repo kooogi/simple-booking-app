@@ -3,6 +3,9 @@ using Microsoft.Data.SqlClient;
 public interface IRoomRepository
 {
   List<Room> GetAvailableRooms(int questsNumber, DateTime startDate, DateTime endDate);
+  void RoomRegistration(int roomNumber, int roomCapacity, int roomPrice);
+  void RoomUpdate(int oldRoomNumber, int newRoomNumber, int roomCapacity, int roomPrice);
+  void RoomRemoval(int roomNumber);
 }
 
 public class RoomRepository : IRoomRepository
@@ -45,5 +48,75 @@ public class RoomRepository : IRoomRepository
       }
     }
     return availableRooms;
+  }
+  public void RoomRegistration(int roomNumber, int roomCapacity, int roomPrice)
+  {
+    using (var connection = new SqlConnection(_connectionString))
+    {
+      connection.Open();
+      const string query = "INSERT INTO Rooms (RoomNumber, Capacity, PricePerNight) VALUES (@roomNumber, @roomCapacity, @roomPrice)";
+
+      using var command = new SqlCommand(query, connection);
+      command.Parameters.AddWithValue("@roomNumber", roomNumber);
+      command.Parameters.AddWithValue("@roomCapacity", roomCapacity);
+      command.Parameters.AddWithValue("@roomPrice", roomPrice);
+
+      int rowsAffected = command.ExecuteNonQuery();
+      if (rowsAffected > 0)
+      {
+        Console.WriteLine("Pomyślnie stworzono pokój");
+      }
+      else
+      {
+        Console.WriteLine("Nie udało się stworzyć pokoju");
+      }
+    }
+  }
+
+  public void RoomUpdate(int oldRoomNumber, int newRoomNumber, int roomCapacity, int roomPrice)
+  {
+    using (var connection = new SqlConnection(_connectionString))
+    {
+      connection.Open();
+      const string query = "UPDATE Rooms SET RoomNumber = @newRoomNumber, Capacity = @roomCapacity, PricePerNight = @roomPrice WHERE RoomNumber = @oldRoomNumber;";
+
+      using var command = new SqlCommand(query, connection);
+      command.Parameters.AddWithValue("@oldRoomNumber", oldRoomNumber);
+      command.Parameters.AddWithValue("@newRoomNumber", newRoomNumber);
+      command.Parameters.AddWithValue("@roomCapacity", roomCapacity);
+      command.Parameters.AddWithValue("@roomPrice", roomPrice);
+
+      int rowsAffected = command.ExecuteNonQuery();
+      if (rowsAffected > 0)
+      {
+        Console.WriteLine("Pomyślnie zaktualizowano pokój");
+      }
+      else
+      {
+        Console.WriteLine("Nie udało się zaktualizować pokoju");
+      }
+    }
+  }
+  public void RoomRemoval(int roomNumber)
+  {
+    using (var connection = new SqlConnection(_connectionString))
+    {
+      connection.Open();
+      const string query = "DELETE FROM Rooms WHERE RoomNumber=@roomNumber";
+
+      using var command = new SqlCommand(query, connection);
+      command.Parameters.AddWithValue("@roomNumber", roomNumber);
+
+
+      int rowsAffected = command.ExecuteNonQuery();
+      if (rowsAffected > 0)
+      {
+        Console.WriteLine("Pomyślnie usunięto pokój");
+      }
+      else
+      {
+        Console.WriteLine("Nie udało się usunąć pokoju");
+      }
+    }
   }
 }

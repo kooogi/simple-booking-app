@@ -16,9 +16,14 @@ GO
 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Reservations') 
 CREATE TABLE Reservations (
     ReservationId INT PRIMARY KEY IDENTITY(1,1),
-    RoomId INT FOREIGN KEY REFERENCES Rooms(RoomId),
+    RoomId INT,
     GuestsNumber INT NOT NULL,
     StartDate DATE NOT NULL,
-    EndDate DATE NOT NULL
+    EndDate DATE NOT NULL,
+
+    CONSTRAINT FK_Reservations_Rooms_Cascade
+    FOREIGN KEY (RoomId)
+    REFERENCES Rooms(RoomId)
+    ON DELETE CASCADE
 );
 GO
