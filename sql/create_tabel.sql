@@ -23,3 +23,5 @@ CREATE TABLE Reservations (
     EndDate DATE
 );
 GO
+
+-- TODO zmienić pricePerNight do room a nie do rezerwacji

@@ -1,9 +1,8 @@
-using System.Data;
 using Microsoft.Data.SqlClient;
 
 public interface IRoomRepository
 {
-  List<Room> GetAvailableRooms(DateTime startDate, DateTime endDate);
+  List<Room> GetAvailableRooms(int questNumber, DateTime startDate, DateTime endDate);
 }
 
 public class RoomRepository : IRoomRepository
@@ -14,7 +13,7 @@ public class RoomRepository : IRoomRepository
     _connectionString = connectionString;
   }
 
-  public List<Room> GetAvailableRooms(DateTime startDate, DateTime endDate)
+  public List<Room> GetAvailableRooms(int questNumber, DateTime startDate, DateTime endDate)
   {
     var availableRooms = new List<Room>();
     using (var connection = new SqlConnection(_connectionString))
@@ -26,9 +25,10 @@ public class RoomRepository : IRoomRepository
                 WHERE RoomId NOT IN (
                     SELECT RoomId
                     FROM Reservations
-                    WHERE StartDate < @endDate AND EndDate > @startDate
-                )";
+                    WHERE (StartDate < @endDate AND EndDate > @startDate))
+                    AND (Capacity >= @questNumber AND Capacity <= @questNumber+2)";
       using var command = new SqlCommand(query, connection);
+      command.Parameters.AddWithValue("@questNumber", questNumber);
       command.Parameters.AddWithValue("@startDate", startDate);
       command.Parameters.AddWithValue("@endDate", endDate);
       using var reader = command.ExecuteReader();

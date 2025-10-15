@@ -24,6 +24,7 @@ if (connectionString == null)
     throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 }
 services.AddSingleton<IRoomRepository>(provider => new RoomRepository(connectionString));
+services.AddSingleton<IReservationRepository>(provider => new ReservationRepository(connectionString));
 
 
 var serviceProvider = services.BuildServiceProvider();
@@ -40,16 +41,6 @@ if (connectionString == null)
 }
 else
 {
-  // Console.WriteLine($"Połączenie: {connectionString}");
-  // var db = new Database(connectionString);
-  // db.TestConnection();
-
-  // var rooms = db.GetAllRooms();
-
-  // foreach(var r in rooms)
-  // {
-  //     Console.WriteLine($"{r.Id} - {r.Number} - {r.Capacity} - {r.PricePerNight}");
-  // }
   bool isRunning = true;
   Console.WriteLine("Witamy  w systemie rezerwacji pokoi wybierz jedną z dostępnych opcji");
   while (isRunning)
@@ -65,7 +56,7 @@ else
         case 1:
           if (reservationService != null)
           {
-            reservationService.CreateReservation();
+            reservationService.ProcessReservation();
           }
           else
           {
