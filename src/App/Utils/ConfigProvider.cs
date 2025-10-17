@@ -3,7 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigProvider
 {
-  private static readonly ServiceCollection services = new();
+  private static readonly ServiceCollection services = new(); // This is REUSED but then you keep adding services!
+                                                    // This will cause duplicate registrations
   public static string? GetConnectionString()
   {
     var builder = new ConfigurationBuilder()
