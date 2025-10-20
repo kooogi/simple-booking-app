@@ -1,10 +1,11 @@
+using System.Security.Cryptography;
 using Microsoft.Data.SqlClient;
 public interface IReservationRepository
 {
   void CreateReservation(int roomNumber, int guestsNumber, DateTime startDate, DateTime endDate);
   List<(Reservation, Room)> reservationsHistory();
   void ReservationRemoval(int reservationId);
-  void ReservationUpdate(int reservationId, DateTime startDate, DateTime endDate);
+  void ReservationUpdate(int reservationId, int roomId, DateTime startDate, DateTime endDate);
 }
 
 public class ReservationRepository : IReservationRepository
@@ -64,7 +65,7 @@ public class ReservationRepository : IReservationRepository
     using (var connection = new SqlConnection(_connectionString))
     {
       connection.Open();
-      const string query = @"SELECT Reservations.StartDate, Reservations.EndDate, Rooms.RoomNumber, Reservations.GuestsNumber, Rooms.Capacity, Rooms.PricePerNight FROM Reservations JOIN Rooms ON Reservations.RoomId = Rooms.RoomId";
+      const string query = @"SELECT Reservations.ReservationId, Reservations.StartDate, Reservations.EndDate, Rooms.RoomNumber, Reservations.GuestsNumber, Rooms.Capacity, Rooms.PricePerNight FROM Reservations JOIN Rooms ON Reservations.RoomId = Rooms.RoomId";
 
       using var command = new SqlCommand(query, connection);
 
@@ -73,6 +74,7 @@ public class ReservationRepository : IReservationRepository
       {
         var reservation = new Reservation
         {
+          ReservationId = reader.GetInt32(reader.GetOrdinal("ReservationId")),
           StartDate = reader.GetDateTime(reader.GetOrdinal("StartDate")),
           EndDate = reader.GetDateTime(reader.GetOrdinal("EndDate")),
           GuestsNumber = reader.GetInt32(reader.GetOrdinal("GuestsNumber"))
@@ -125,11 +127,11 @@ public class ReservationRepository : IReservationRepository
       }
     }
   }
-  public void ReservationUpdate(int reservationId, DateTime startDate, DateTime endDate)
+  public void ReservationUpdate(int reservationId, int roomId, DateTime startDate, DateTime endDate)
   {
     using (var connection = new SqlConnection(_connectionString))
     {
-      const string query = "UPDATE Reservations SET StartDate = @startDate, EndDate = @endDate WHERE ReservationId = @reservationId;";
+      const string query = "UPDATE Reservations SET StartDate = @startDate, EndDate = @endDate, RoomId = @roomId WHERE ReservationId = @reservationId;";
 
       connection.Open();
       SqlTransaction transaction = connection.BeginTransaction();
@@ -138,6 +140,7 @@ public class ReservationRepository : IReservationRepository
       {
         using var command = new SqlCommand(query, connection, transaction);
         command.Parameters.AddWithValue("@reservationId", reservationId);
+        command.Parameters.AddWithValue("@roomId", roomId);
         command.Parameters.AddWithValue("@startDate", startDate);
         command.Parameters.AddWithValue("@endDate", endDate);
         command.ExecuteNonQuery();
