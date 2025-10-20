@@ -8,8 +8,11 @@ public static class RoomModule
       "Edit Room",
       "Delete Room",
       "Check Available Rooms",
+      "List All Rooms",
       "Back"
     };
+
+    string[] subMenuOption = { "Back" };
 
     Console.Clear();
     Console.WriteLine("Select from available modules");
@@ -29,6 +32,9 @@ public static class RoomModule
         {
           Console.WriteLine("Creation service is not available.");
         }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
         break;
       case 1:
         if (roomService != null)
@@ -39,6 +45,9 @@ public static class RoomModule
         {
           Console.WriteLine("Reservation service is not available.");
         }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
         break;
       case 2:
         if (roomService != null)
@@ -49,6 +58,9 @@ public static class RoomModule
         {
           Console.WriteLine("Reservation service is not available.");
         }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
         break;
       case 3:
         if (roomService != null)
@@ -59,11 +71,26 @@ public static class RoomModule
         {
           Console.WriteLine("Availability service is not available.");
         }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
         break;
       case 4:
+        if (roomService != null)
+        {
+          roomService.ShowAllRooms();
+        }
+        else
+        {
+          Console.WriteLine("Availability service is not available.");
+        }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
+        break;
+      case 5:
         MainModule.DisplayMenu();
         break;
     }
-    Console.ReadKey();
   }
 }

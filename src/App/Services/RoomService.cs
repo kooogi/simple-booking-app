@@ -1,4 +1,4 @@
-public interface IRoomService { (int, DateTime, DateTime) CheckAvailability(); void CreateRoom(); void EditRoom(); void DeleteRoom(); }
+public interface IRoomService { (int, DateTime, DateTime) CheckAvailability(); void CreateRoom(); void EditRoom(); void DeleteRoom(); void ShowAllRooms(); }
 
 public class RoomService : IRoomService
 {
@@ -134,5 +134,13 @@ public class RoomService : IRoomService
     }
 
     return (roomNumber, roomCapacity, roomPrice);
+  }
+
+  public void ShowAllRooms() {
+    var roomList = _roomRepository.RoomList();
+    Console.WriteLine("List of all Rooms");
+    foreach(var room in roomList){
+      Console.WriteLine($"RoomID: {room.RoomId}, Room Number: {room.RoomNumber}, Capacity: {room.Capacity}, Price Per Night: {room.PricePerNight}");
+    }
   }
 }

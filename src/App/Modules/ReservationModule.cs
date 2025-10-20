@@ -29,6 +29,9 @@ public static class ReservationModule
         {
           Console.WriteLine("Reservation service is not available.");
         }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
         break;
       case 1:
         if (reservationService != null)
@@ -39,6 +42,9 @@ public static class ReservationModule
         {
           Console.WriteLine("Reservation service is not available.");
         }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
         break;
       case 2:
         if (reservationService != null)
@@ -49,6 +55,9 @@ public static class ReservationModule
         {
           Console.WriteLine("Reservation service is not available.");
         }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
         break;
       case 3:
         if (reservationService != null)
@@ -59,6 +68,9 @@ public static class ReservationModule
         {
           Console.WriteLine("Reservation service is not available.");
         }
+        Console.WriteLine("Press any key to go back...");
+        Console.ReadKey();
+        DisplayMenu();
         break;
       case 4:
         MainModule.DisplayMenu();
