@@ -12,20 +12,21 @@ public class ReservationService : IReservationService
   }
   public void ProcessReservation()
   {
-    var (guestsNumber, startDate, endDate) = _roomService.CheckAvailability();
+    string[] menuRoomCreation = _roomService.CheckAvailability();
+    int choice = ConsoleMenu.ShowMenu("Available rooms: ", menuRoomCreation);
 
-    Console.WriteLine("Choose from the available options by entering the room number");
-    string? availableOptionsInput = Console.ReadLine();
-    int availableRoomOptions;
-    if (int.TryParse(availableOptionsInput, out availableRoomOptions))
-    {
-      _reservationRepository.CreateReservation(availableRoomOptions, guestsNumber, startDate, endDate);
-    }
-    else
-    {
-      Console.WriteLine("Invalid format, please choose from the list by entering the room number");
-      return;
-    }
+    Console.WriteLine($"Selected room: {menuRoomCreation[choice]}");
+
+    Match matchRoomNumber = Regex.Match(menuRoomCreation[choice], @"Room:\s*(\d+)");
+    int roomNumber = int.Parse(matchRoomNumber.Groups[1].Value);
+    Match matchGuestsNumber = Regex.Match(menuRoomCreation[choice], @"Capacity:\s*(\d+)");
+    int guestsNumber = int.Parse(matchGuestsNumber.Groups[1].Value);
+    Match matchStartDate = Regex.Match(menuRoomCreation[choice], @"Check-In:\s*(\d{1,2}\.\d{1,2}\.\d{4})");
+    DateTime startDate = DateTime.Parse(matchStartDate.Groups[1].Value);
+    Match matchEndDate = Regex.Match(menuRoomCreation[choice], @"Check-Out:\s*(\d{1,2}\.\d{1,2}\.\d{4})");
+    DateTime endDate = DateTime.Parse(matchEndDate.Groups[1].Value);
+  
+    _reservationRepository.CreateReservation(roomNumber, guestsNumber, startDate, endDate);
   }
   public void ShowReservations()
   {

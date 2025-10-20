@@ -76,6 +76,5 @@ public static class ReservationModule
         MainModule.DisplayMenu();
         break;
     }
-    Console.ReadKey();
   }
 }

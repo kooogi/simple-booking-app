@@ -1,4 +1,4 @@
-public interface IRoomService { (int, DateTime, DateTime) CheckAvailability(); void CreateRoom(); void EditRoom(); void DeleteRoom(); void ShowAllRooms(); }
+public interface IRoomService { string[] CheckAvailability(); void CreateRoom(); void EditRoom(); void DeleteRoom(); void ShowAllRooms(); void DisplayAvailability(); }
 
 public class RoomService : IRoomService
 {
@@ -8,55 +8,62 @@ public class RoomService : IRoomService
   {
     _roomRepository = roomRepository;
   }
-  public (int, DateTime, DateTime) CheckAvailability()
+  public string[] CheckAvailability()
   {
     Console.WriteLine("Enter the number of guests");
-    string? questsNumberInput = Console.ReadLine();
-    int questsNumber;
-    if (int.TryParse(questsNumberInput, out questsNumber))
-    {
+    string? guestsNumberInput = Console.ReadLine();
+    int guestsNumber;
 
-    }
-    else
+    while (!int.TryParse(guestsNumberInput, out guestsNumber) || guestsNumber < 0)
     {
-      Console.WriteLine("Invalid format, please enter a number");
-      return (default, default, default);
+      Console.WriteLine("Invalid value | Provide number of guests once again");
+      guestsNumberInput = Console.ReadLine();
     }
-    //Entering dates
+
     Console.WriteLine("Enter check-in date (dd.MM.yyyy)");
     string? startDateInput = Console.ReadLine();
     DateTime startDate;
-    if (startDateInput != null && DateTime.TryParse(startDateInput, out startDate))
+    while (startDateInput == null || !DateTime.TryParse(startDateInput, out startDate) || startDate < DateTime.Today)
     {
-
-    }
-    else
-    {
-      Console.WriteLine("Invalid date format (dd.MM.yyyy)");
-      return (default, default, default);
+      Console.WriteLine("Invalid date format (dd.MM.yyyy) | Provide check-in date once again");
+      startDateInput = Console.ReadLine();
     }
 
     Console.WriteLine("Enter check-out date (dd.MM.yyyy)");
     string? endDateInput = Console.ReadLine();
     DateTime endDate;
-    if (endDateInput != null && DateTime.TryParse(endDateInput, out endDate))
+    while (endDateInput == null || !DateTime.TryParse(endDateInput, out endDate) || endDate <= startDate)
     {
-
-    }
-    else
-    {
-      Console.WriteLine("Invalid date format (dd.MM.yyyy)");
-      return (default, default, default);
+      Console.WriteLine("Invalid date format (dd.MM.yyyy) | Provide check-out date once again");
+      endDateInput = Console.ReadLine();
     }
 
     //Check room availability based on provided dates
-    var availableRooms = _roomRepository.GetAvailableRooms(questsNumber, startDate, endDate);
-    Console.WriteLine("Available rooms");
+    var availableRooms = _roomRepository.GetAvailableRooms(guestsNumber, startDate, endDate);
+    List<string> list = new List<string>();
     foreach (var room in availableRooms)
     {
-      Console.WriteLine($"Room: {room.RoomNumber}, Capacity: {room.Capacity}, Price per night: {room.PricePerNight} PLN");
+      list.Add($"Room: {room.RoomNumber}, Capacity: {room.Capacity}, Price per night: {room.PricePerNight} PLN, Check-In: {startDate:d}, Check-Out: {endDate:d}");
     }
-    return (questsNumber, startDate, endDate);
+    string[] menuRoomCreation = list.ToArray();
+    if (menuRoomCreation.Length == 0)
+    {
+      Console.WriteLine($"No available rooms between {startDate} and {endDate} for {guestsNumber} guests");
+    }
+    return menuRoomCreation;
+  }
+  
+  public void DisplayAvailability()
+  {
+    string[] availableRooms = CheckAvailability();
+    if(availableRooms.Length != 0)
+    {
+      Console.WriteLine("Available rooms: ");
+      foreach(var room in availableRooms)
+      {
+        Console.WriteLine(room);
+      }
+    }
   }
 
   public void CreateRoom()

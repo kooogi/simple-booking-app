@@ -65,7 +65,7 @@ public static class RoomModule
       case 3:
         if (roomService != null)
         {
-          roomService.CheckAvailability();
+          roomService.DisplayAvailability();
         }
         else
         {
