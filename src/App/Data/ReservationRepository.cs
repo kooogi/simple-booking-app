@@ -1,7 +1,7 @@
 using Microsoft.Data.SqlClient;
 public interface IReservationRepository
 {
-  bool CreateReservation(int roomNumber, int guestsNumber, DateTime startDate, DateTime endDate);
+  void CreateReservation(int roomNumber, int guestsNumber, DateTime startDate, DateTime endDate);
   List<(Reservation, Room)> reservationsHistory();
   void ReservationRemoval(int reservationId);
   void ReservationUpdate(int reservationId, DateTime startDate, DateTime endDate);
@@ -14,11 +14,10 @@ public class ReservationRepository : IReservationRepository
   {
     _connectionString = connectionString;
   }
-  public bool CreateReservation(int roomNumber, int guestsNumber, DateTime startDate, DateTime endDate)
+  public void CreateReservation(int roomNumber, int guestsNumber, DateTime startDate, DateTime endDate)
   {
     using (var connection = new SqlConnection(_connectionString))
     {
-      connection.Open();
       const string query = @"INSERT INTO Reservations (RoomId, GuestsNumber, StartDate, EndDate) 
         VALUES (
             (SELECT RoomId FROM Rooms WHERE RoomNumber = @roomNumber),  
@@ -27,22 +26,35 @@ public class ReservationRepository : IReservationRepository
             @endDate
         );";
 
-      using var command = new SqlCommand(query, connection);
-      command.Parameters.AddWithValue("@roomNumber", roomNumber);
-      command.Parameters.AddWithValue("@guestsNumber", guestsNumber);
-      command.Parameters.AddWithValue("@startDate", startDate);
-      command.Parameters.AddWithValue("@endDate", endDate);
+      connection.Open();
+      SqlTransaction transaction = connection.BeginTransaction();
 
-      int rowsAffected = command.ExecuteNonQuery();
-      if (rowsAffected > 0)
+      try
       {
-        Console.WriteLine("Reservation created successfully");
-        return true;
+        using var command = new SqlCommand(query, connection, transaction);
+        command.Parameters.AddWithValue("@roomNumber", roomNumber);
+        command.Parameters.AddWithValue("@guestsNumber", guestsNumber);
+        command.Parameters.AddWithValue("@startDate", startDate);
+        command.Parameters.AddWithValue("@endDate", endDate);
+        command.ExecuteNonQuery();
+        Console.WriteLine("Do You want to create reservation on room: " + roomNumber + " (Y/N)");
+        string? confirm = Console.ReadLine();
+
+        if (confirm?.ToUpper() == "Y")
+        {
+          transaction.Commit();
+          Console.WriteLine("Transaction confirmed - room " + roomNumber + " reservation created");
+        }
+        else
+        {
+          transaction.Rollback();
+          Console.WriteLine("Transaction canceled");
+        }
       }
-      else
+      catch (Exception ex) 
       {
-        Console.WriteLine("Failed to create reservation");
-        return false;
+        transaction.Rollback();
+        Console.WriteLine("Error: " + ex.Message); 
       }
     }
   }
@@ -82,21 +94,34 @@ public class ReservationRepository : IReservationRepository
   {
     using (var connection = new SqlConnection(_connectionString))
     {
-      connection.Open();
       const string query = "DELETE FROM Reservations WHERE ReservationId=@reservationId";
 
-      using var command = new SqlCommand(query, connection);
-      command.Parameters.AddWithValue("@reservationId", reservationId);
+      connection.Open();
+      SqlTransaction transaction = connection.BeginTransaction();
 
-
-      int rowsAffected = command.ExecuteNonQuery();
-      if (rowsAffected > 0)
+      try
       {
-        Console.WriteLine("Reservation deleted successfully");
+        using var command = new SqlCommand(query, connection, transaction);
+        command.Parameters.AddWithValue("@reservationId", reservationId);
+        command.ExecuteNonQuery();
+        Console.WriteLine("Do You want to delete reservation: " + reservationId + " (Y/N)");
+        string? confirm = Console.ReadLine();
+
+        if (confirm?.ToUpper() == "Y")
+        {
+          transaction.Commit();
+          Console.WriteLine("Transaction confirmed - reservation: " + reservationId + " deleted");
+        }
+        else
+        {
+          transaction.Rollback();
+          Console.WriteLine("Transaction canceled");
+        }
       }
-      else
+      catch (Exception ex)
       {
-        Console.WriteLine("Failed to delete reservation");
+        transaction.Rollback();
+        Console.WriteLine("Error: " + ex.Message);
       }
     }
   }
@@ -104,22 +129,37 @@ public class ReservationRepository : IReservationRepository
   {
     using (var connection = new SqlConnection(_connectionString))
     {
-      connection.Open();
       const string query = "UPDATE Reservations SET StartDate = @startDate, EndDate = @endDate WHERE ReservationId = @reservationId;";
 
-      using var command = new SqlCommand(query, connection);
-      command.Parameters.AddWithValue("@reservationId", reservationId);
-      command.Parameters.AddWithValue("@startDate", startDate);
-      command.Parameters.AddWithValue("@endDate", endDate);
+      connection.Open();
+      SqlTransaction transaction = connection.BeginTransaction();
 
-      int rowsAffected = command.ExecuteNonQuery();
-      if (rowsAffected > 0)
+      try
       {
-        Console.WriteLine("Reservation updated successfully");
+        using var command = new SqlCommand(query, connection, transaction);
+        command.Parameters.AddWithValue("@reservationId", reservationId);
+        command.Parameters.AddWithValue("@startDate", startDate);
+        command.Parameters.AddWithValue("@endDate", endDate);
+        command.ExecuteNonQuery();
+
+        Console.WriteLine("Do You want to update reservation: " + reservationId + " (Y/N)");
+        string? confirm = Console.ReadLine();
+
+        if (confirm?.ToUpper() == "Y")
+        {
+          transaction.Commit();
+          Console.WriteLine("Transaction confirmed - reservation: " + reservationId + " updated");
+        }
+        else
+        {
+          transaction.Rollback();
+          Console.WriteLine("Transaction canceled");
+        }
       }
-      else
+      catch (Exception ex)
       {
-        Console.WriteLine("Failed to update reservation");
+        transaction.Rollback();
+        Console.WriteLine("Error: " + ex.Message);
       }
     }
   }
