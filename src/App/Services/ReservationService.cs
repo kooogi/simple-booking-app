@@ -1,4 +1,4 @@
-public interface IReservationService { void ProcessReservation(); void showReservations(); void EditReservation(); void DeleteReservation(); }
+public interface IReservationService { void ProcessReservation(); void ShowReservations(); void EditReservation(); void DeleteReservation(); }
 
 public class ReservationService : IReservationService
 {
@@ -26,7 +26,7 @@ public class ReservationService : IReservationService
       return;
     }
   }
-  public void showReservations()
+  public void ShowReservations()
   {
     var reservationList = _reservationRepository.reservationsHistory();
     Console.WriteLine("All reservations:");

@@ -53,7 +53,7 @@ public static class ReservationModule
       case 3:
         if (reservationService != null)
         {
-          reservationService.showReservations();
+          reservationService.ShowReservations();
         }
         else
         {
