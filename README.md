@@ -284,16 +284,16 @@ When you start the application, you'll see:
 ```
 ┌─────────────────────────────┐
 │   Presentation Layer        │
-│   (Modules - UI)           │
+│   (Modules - UI)            │
 ├─────────────────────────────┤
 │   Business Logic Layer      │
-│   (Services)               │
+│   (Services)                │
 ├─────────────────────────────┤
 │   Data Access Layer         │
-│   (Repositories)           │
+│   (Repositories)            │
 ├─────────────────────────────┤
 │   Database                  │
-│   (SQL Server)             │
+│   (SQL Server)              │
 └─────────────────────────────┘
 ```
 
