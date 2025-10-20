@@ -2,7 +2,9 @@ public static class RoomModule
 {
   public static void DisplayMenu()
   {
-    string[] menuOptions =
+    while (true)
+    {
+          string[] menuOptions =
     {
       "Create Room",
       "Edit Room",
@@ -34,7 +36,6 @@ public static class RoomModule
         }
         Console.WriteLine("Press any key to go back...");
         Console.ReadKey();
-        DisplayMenu();
         break;
       case 1:
         if (roomService != null)
@@ -47,7 +48,6 @@ public static class RoomModule
         }
         Console.WriteLine("Press any key to go back...");
         Console.ReadKey();
-        DisplayMenu();
         break;
       case 2:
         if (roomService != null)
@@ -60,7 +60,6 @@ public static class RoomModule
         }
         Console.WriteLine("Press any key to go back...");
         Console.ReadKey();
-        DisplayMenu();
         break;
       case 3:
         if (roomService != null)
@@ -73,7 +72,6 @@ public static class RoomModule
         }
         Console.WriteLine("Press any key to go back...");
         Console.ReadKey();
-        DisplayMenu();
         break;
       case 4:
         if (roomService != null)
@@ -86,11 +84,10 @@ public static class RoomModule
         }
         Console.WriteLine("Press any key to go back...");
         Console.ReadKey();
-        DisplayMenu();
         break;
       case 5:
-        MainModule.DisplayMenu();
-        break;
+        return;
+    }
     }
   }
 }
