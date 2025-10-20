@@ -1,3 +1,4 @@
+using System.Data;
 using System.Security.Cryptography;
 using Microsoft.Data.SqlClient;
 public interface IReservationRepository
@@ -10,6 +11,7 @@ public interface IReservationRepository
 
 public class ReservationRepository : IReservationRepository
 {
+  private const string accept = "Y";
   private readonly string _connectionString;
   public ReservationRepository(string connectionString)
   {
@@ -41,7 +43,7 @@ public class ReservationRepository : IReservationRepository
         Console.WriteLine("Do You want to create reservation on room: " + roomNumber + " (Y/N)");
         string? confirm = Console.ReadLine();
 
-        if (confirm?.ToUpper() == "Y")
+        if (confirm?.ToUpper() == accept)
         {
           transaction.Commit();
           Console.WriteLine("Transaction confirmed - room " + roomNumber + " reservation created");
@@ -109,7 +111,7 @@ public class ReservationRepository : IReservationRepository
         Console.WriteLine("Do You want to delete reservation: " + reservationId + " (Y/N)");
         string? confirm = Console.ReadLine();
 
-        if (confirm?.ToUpper() == "Y")
+        if (confirm?.ToUpper() == accept)
         {
           transaction.Commit();
           Console.WriteLine("Transaction confirmed - reservation: " + reservationId + " deleted");
@@ -148,7 +150,7 @@ public class ReservationRepository : IReservationRepository
         Console.WriteLine("Do You want to update reservation: " + reservationId + " (Y/N)");
         string? confirm = Console.ReadLine();
 
-        if (confirm?.ToUpper() == "Y")
+        if (confirm?.ToUpper() == accept)
         {
           transaction.Commit();
           Console.WriteLine("Transaction confirmed - reservation: " + reservationId + " updated");
