@@ -54,22 +54,37 @@ public class RoomRepository : IRoomRepository
   {
     using (var connection = new SqlConnection(_connectionString))
     {
-      connection.Open();
       const string query = "INSERT INTO Rooms (RoomNumber, Capacity, PricePerNight) VALUES (@roomNumber, @roomCapacity, @roomPrice)";
 
-      using var command = new SqlCommand(query, connection);
-      command.Parameters.AddWithValue("@roomNumber", roomNumber);
-      command.Parameters.AddWithValue("@roomCapacity", roomCapacity);
-      command.Parameters.AddWithValue("@roomPrice", roomPrice);
+      connection.Open();
+      SqlTransaction transaction = connection.BeginTransaction();
 
-      int rowsAffected = command.ExecuteNonQuery();
-      if (rowsAffected > 0)
+      try
       {
-        Console.WriteLine("Room created successfully");
+        using var command = new SqlCommand(query, connection, transaction);
+        command.Parameters.AddWithValue("@roomNumber", roomNumber);
+        command.Parameters.AddWithValue("@roomCapacity", roomCapacity);
+        command.Parameters.AddWithValue("@roomPrice", roomPrice);
+        command.ExecuteNonQuery();
+
+        Console.WriteLine("Do You want to create room: " + roomNumber + " (Y/N)");
+        string? confirm = Console.ReadLine();
+
+        if (confirm?.ToUpper() == "Y")
+        {
+          transaction.Commit();
+          Console.WriteLine("Transaction confirmed - room " + roomNumber + " created");
+        }
+        else
+        {
+          transaction.Rollback();
+          Console.WriteLine("Transaction canceled");
+        }
       }
-      else
+      catch (Exception ex)
       {
-        Console.WriteLine("Failed to create room");
+        transaction.Rollback();
+        Console.WriteLine("Error: " + ex.Message);
       }
     }
   }
@@ -78,23 +93,39 @@ public class RoomRepository : IRoomRepository
   {
     using (var connection = new SqlConnection(_connectionString))
     {
-      connection.Open();
       const string query = "UPDATE Rooms SET RoomNumber = @newRoomNumber, Capacity = @roomCapacity, PricePerNight = @roomPrice WHERE RoomNumber = @oldRoomNumber;";
 
-      using var command = new SqlCommand(query, connection);
-      command.Parameters.AddWithValue("@oldRoomNumber", oldRoomNumber);
-      command.Parameters.AddWithValue("@newRoomNumber", newRoomNumber);
-      command.Parameters.AddWithValue("@roomCapacity", roomCapacity);
-      command.Parameters.AddWithValue("@roomPrice", roomPrice);
+      connection.Open();
+      SqlTransaction transaction = connection.BeginTransaction();
 
-      int rowsAffected = command.ExecuteNonQuery();
-      if (rowsAffected > 0)
+      try
       {
-        Console.WriteLine("Room updated successfully");
+        using var command = new SqlCommand(query, connection, transaction);
+        command.Parameters.AddWithValue("@oldRoomNumber", oldRoomNumber);
+        command.Parameters.AddWithValue("@newRoomNumber", newRoomNumber);
+        command.Parameters.AddWithValue("@roomCapacity", roomCapacity);
+        command.Parameters.AddWithValue("@roomPrice", roomPrice);
+        command.ExecuteNonQuery();
+
+        Console.WriteLine("Do You want to update room: " + oldRoomNumber + " (Y/N)");
+        string? confirm = Console.ReadLine();
+
+        if (confirm?.ToUpper() == "Y")
+        {
+          transaction.Commit();
+          Console.WriteLine("Transaction confirmed - room " + oldRoomNumber + " updated");
+        }
+        else
+        {
+          transaction.Rollback();
+          Console.WriteLine("Transaction canceled");
+        }
+
       }
-      else
+      catch (Exception ex)
       {
-        Console.WriteLine("Failed to update room");
+        transaction.Rollback();
+        Console.WriteLine("Error: " + ex.Message);
       }
     }
   }
