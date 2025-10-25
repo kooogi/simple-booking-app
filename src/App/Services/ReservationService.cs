@@ -40,7 +40,6 @@ public class ReservationService : IReservationService
 
   public void EditReservation(){
     var reservationList = _reservationRepository.reservationsHistory();
-    // Console.WriteLine("All reservations:");
     List<string> list = new List<string>();
     foreach (var reservation in reservationList)
     {
@@ -78,7 +77,6 @@ public class ReservationService : IReservationService
   public void DeleteReservation()
   {
     var reservationList = _reservationRepository.reservationsHistory();
-    // Console.WriteLine("All reservations:");
     List<string> list = new List<string>();
     foreach (var reservation in reservationList)
     {
@@ -91,7 +89,7 @@ public class ReservationService : IReservationService
 
     Match matchResId = Regex.Match(menuReservation[choice], @"ID:\s*(\d+)");
     int reservationId = int.Parse(matchResId.Groups[1].Value);
-    
+
     _reservationRepository.ReservationRemoval(reservationId);
   }
 }

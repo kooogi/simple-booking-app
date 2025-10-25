@@ -39,7 +39,6 @@ public class RoomService : IRoomService
       endDateInput = Console.ReadLine();
     }
 
-    //Check room availability based on provided dates
     var availableRooms = _roomRepository.GetAvailableRooms(guestsNumber, startDate, endDate);
     List<string> list = new List<string>();
     foreach (var room in availableRooms)
