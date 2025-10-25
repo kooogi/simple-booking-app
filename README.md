@@ -41,12 +41,18 @@ A console-based room reservation system built with C# and SQL Server, featuring 
 
 ## 🛠 Technologies
 
-- **Language:** C# 10.0 / .NET 10.0
-- **Database:** Microsoft SQL Server
+- **Language:** C# / .NET 10.0
+- **Database:** Microsoft SQL Server (LocalDB/Express/Full)
 - **Libraries:**
   - Microsoft.Data.SqlClient (6.1.2)
   - Microsoft.Extensions.Configuration (9.0.9)
+  - Microsoft.Extensions.Configuration.Binder (9.0.9)
+  - Microsoft.Extensions.Configuration.Json (9.0.9)
   - Microsoft.Extensions.DependencyInjection (9.0.9)
+- **Testing:**
+  - xUnit (3.0.0)
+  - Moq (4.20.72)
+  - Microsoft.NET.Test.Sdk (17.14.1)
 
 ## 📦 Prerequisites
 
@@ -115,10 +121,14 @@ CREATE TABLE Rooms (
 ```sql
 CREATE TABLE Reservations (
     ReservationId INT PRIMARY KEY IDENTITY(1,1),
-    RoomId INT FOREIGN KEY REFERENCES Rooms(RoomId),
+    RoomId INT,
     GuestsNumber INT NOT NULL,
     StartDate DATE NOT NULL,
-    EndDate DATE NOT NULL
+    EndDate DATE NOT NULL,
+    CONSTRAINT FK_Reservations_Rooms_Cascade
+    FOREIGN KEY (RoomId)
+    REFERENCES Rooms(RoomId)
+    ON DELETE CASCADE
 );
 ```
 
@@ -131,14 +141,20 @@ CREATE TABLE Reservations (
    ```json
    {
      "ConnectionStrings": {
-       "DefaultConnection": "Server=localhost;Database=SimpleBookingAppDB;Trusted_Connection=True;TrustServerCertificate=True;"
+       "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=SimpleBookingAppDB;Trusted_Connection=True;TrustServerCertificate=True;"
      }
    }
    ```
 
 2. **Connection string options:**
 
-   - **Windows Authentication:**
+   - **Windows Authentication (SQL Server Express):**
+
+     ```
+     Server=localhost\SQLEXPRESS;Database=SimpleBookingAppDB;Trusted_Connection=True;TrustServerCertificate=True;
+     ```
+
+   - **Windows Authentication (Default Instance):**
 
      ```
      Server=localhost;Database=SimpleBookingAppDB;Trusted_Connection=True;TrustServerCertificate=True;
@@ -203,7 +219,17 @@ simple-booking-app/
 │   ├── create_database.sql
 │   ├── create_table.sql
 │   └── generate_dummy_data.sql
-├── tests/                            # Unit Tests (TODO)
+├── tests/                            # Test Suite
+│   ├── TESTING_GUIDE.md
+│   └── BookingApp.Tests/
+│       ├── DatabaseTestHelper.cs     # Integration test helper
+│       ├── ModelTests.cs             # Model unit tests
+│       ├── RoomServiceTests.cs       # Service unit tests
+│       ├── ReservationServiceTests.cs # Service unit tests
+│       ├── RoomRepositoryTests.cs    # Integration tests
+│       ├── UnitTest1.cs              # Placeholder test
+│       ├── appsettings.json
+│       └── BookingApp.Tests.csproj
 └── README.md
 ```
 
@@ -230,14 +256,15 @@ When you start the application, you'll see:
 
 2. **Edit Room:**
 
-   - Enter the current room number
+   - Select room from the list
    - Provide new room details
    - Confirm the update (Y/N)
 
 3. **Delete Room:**
 
-   - Enter the room number to delete
+   - Select the room to delete from the list
    - Confirm the deletion (Y/N)
+   - Note: Deletes associated reservations (CASCADE)
 
 4. **Check Available Rooms:**
 
@@ -252,19 +279,19 @@ When you start the application, you'll see:
 
 1. **Create Reservation:**
 
-   - First, check available rooms
-   - Enter the room number to reserve
+   - Check available rooms (enter guests, check-in, check-out dates)
+   - Select room from available options
    - Confirm the reservation (Y/N)
 
 2. **Edit Reservation:**
 
-   - Enter reservation ID
+   - Select reservation from the list
    - Provide new check-in and check-out dates
    - Confirm the update (Y/N)
 
 3. **Delete Reservation:**
 
-   - Enter reservation ID to delete
+   - Select reservation to delete from the list
    - Confirm the deletion (Y/N)
 
 4. **List Reservations:**
@@ -311,23 +338,45 @@ When you start the application, you'll see:
 - ✅ Transaction-based operations (ensures data consistency)
 - ✅ User confirmation for destructive operations
 - ✅ Error handling with rollback support
+- ✅ Cascade delete for referential integrity
 
-## 🐛 Known Issues
+## 🧪 Testing
 
-- Input validation for negative numbers is limited
-- Date validation (end date before start date) needs improvement
-- Stack overflow risk with recursive menu calls (consider while loop)
+The project includes a comprehensive test suite with both unit and integration tests:
+
+### Running Tests
+
+```bash
+cd tests/BookingApp.Tests
+dotnet test
+```
+
+### Test Coverage
+
+- **Unit Tests (10):** Model validation, service logic with mocking
+- **Integration Tests (3):** Repository operations with real database
+- **Total Tests:** 13 passing tests
+
+### Test Structure
+
+- **ModelTests:** Validates Room and Reservation model properties
+- **RoomServiceTests:** Tests business logic with mocked dependencies
+- **ReservationServiceTests:** Verifies reservation workflows
+- **RoomRepositoryTests:** Integration tests with actual database operations
+- **DatabaseTestHelper:** Utility class for integration test setup and cleanup
+
+For detailed testing information, see [TESTING_GUIDE.md](tests/TESTING_GUIDE.md).
 
 ## 🚀 Future Enhancements
 
-- [ ] Add comprehensive input validation
-- [ ] Implement unit tests
 - [ ] Add user authentication
 - [ ] Generate reservation invoices
 - [ ] Export data to CSV/PDF
 - [ ] Add search and filter capabilities
 - [ ] Implement logging system
 - [ ] Add configuration for different environments
+- [ ] Increase test coverage
+- [ ] Add CI/CD pipeline
 
 ## 👤 Author
 
