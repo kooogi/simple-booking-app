@@ -5,7 +5,7 @@ public interface IRoomRepository
   List<Room> GetAvailableRooms(int questsNumber, DateTime startDate, DateTime endDate);
   void RoomRegistration(int roomNumber, int roomCapacity, int roomPrice);
   void RoomUpdate(int oldRoomNumber, int newRoomNumber, int roomCapacity, int roomPrice);
-  void RoomRemoval(int roomNumber);
+  void RoomRemoval(int roomId);
   List<Room> RoomList();
 }
 
@@ -129,27 +129,27 @@ public class RoomRepository : IRoomRepository
       }
     }
   }
-  public void RoomRemoval(int roomNumber)
+  public void RoomRemoval(int roomId)
   {
     using (var connection = new SqlConnection(_connectionString))
     {
-      const string query = "DELETE FROM Rooms WHERE RoomNumber=@roomNumber";
+      const string query = "DELETE FROM Rooms WHERE RoomId=@roomId";
 
       connection.Open();
       SqlTransaction transaction = connection.BeginTransaction();
       try
       {
         using var command = new SqlCommand(query, connection, transaction);
-        command.Parameters.AddWithValue("@roomNumber", roomNumber);
+        command.Parameters.AddWithValue("@roomId", roomId);
         command.ExecuteNonQuery();
 
-        Console.WriteLine("Do You want to delete room: " + roomNumber + " (Y/N)");
+        Console.WriteLine("Do You want to delete room: " + roomId + " (Y/N)");
         string? confirm = Console.ReadLine();
 
         if (confirm?.ToUpper() == "Y")
         {
           transaction.Commit();
-          Console.WriteLine("Transaction confirmed - room " + roomNumber + " deleted");
+          Console.WriteLine("Transaction confirmed - room " + roomId + " deleted");
         }
         else
         {

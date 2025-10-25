@@ -77,17 +77,21 @@ public class ReservationService : IReservationService
 
   public void DeleteReservation()
   {
-    Console.WriteLine("Enter the reservation number to delete");
-    string? roomNumberInput = Console.ReadLine();
-    int reservationId;
-    if (int.TryParse(roomNumberInput, out reservationId))
+    var reservationList = _reservationRepository.reservationsHistory();
+    // Console.WriteLine("All reservations:");
+    List<string> list = new List<string>();
+    foreach (var reservation in reservationList)
     {
+      list.Add($"ID: {reservation.Item1.ReservationId} | From: {reservation.Item1.StartDate:d}, To: {reservation.Item1.EndDate:d}, Room: {reservation.Item2.RoomNumber}, Number of guests: {reservation.Item1.GuestsNumber}, Room capacity: {reservation.Item2.Capacity}, Price per night: {reservation.Item2.PricePerNight}");
+    }
+    string[] menuReservation = list.ToArray();
+    int choice = ConsoleMenu.ShowMenu("All reservations:", menuReservation);
 
-    }
-    else
-    {
-      Console.WriteLine("Invalid format, please enter a number");
-    }
+    Console.WriteLine($"Selected reservation: {menuReservation[choice]}");
+
+    Match matchResId = Regex.Match(menuReservation[choice], @"ID:\s*(\d+)");
+    int reservationId = int.Parse(matchResId.Groups[1].Value);
+    
     _reservationRepository.ReservationRemoval(reservationId);
   }
 }

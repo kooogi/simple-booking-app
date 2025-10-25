@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 public interface IRoomService { string[] CheckAvailability(); void CreateRoom(); void EditRoom(); void DeleteRoom(); void ShowAllRooms(); void DisplayAvailability(); }
 
 public class RoomService : IRoomService
@@ -73,34 +74,46 @@ public class RoomService : IRoomService
   }
   public void EditRoom()
   {
-    Console.WriteLine("Enter the current room number");
-    string? roomNumberInput = Console.ReadLine();
-    int oldRoomNumber;
-    if (int.TryParse(roomNumberInput, out oldRoomNumber))
-    {
+    var roomList = _roomRepository.RoomList();
+    List<string> list = new List<string>();
 
-    }
-    else
+    foreach (var room in roomList)
     {
-      Console.WriteLine("Invalid format, please enter a number");
+      list.Add($"RoomID: {room.RoomId}, Room Number: {room.RoomNumber}, Capacity: {room.Capacity}, Price Per Night: {room.PricePerNight}");
     }
+    
+    string[] menuRoom = list.ToArray();
+    int choice = ConsoleMenu.ShowMenu("All reservations:", menuRoom);
+
+    Console.WriteLine($"Selected Room: {menuRoom[choice]}");
+
+    Match matchRoomNumber = Regex.Match(menuRoom[choice], @"Room Number:\s*(\d+)");
+    int roomNumber = int.Parse(matchRoomNumber.Groups[1].Value);
+
+    Console.WriteLine("Provide new Room data:");
+
     var (newRoomNumber, roomCapacity, roomPrice) = RoomCreateEditUI();
-    _roomRepository.RoomUpdate(oldRoomNumber, newRoomNumber, roomCapacity, roomPrice);
+    _roomRepository.RoomUpdate(roomNumber, newRoomNumber, roomCapacity, roomPrice);
   }
   public void DeleteRoom()
   {
-    Console.WriteLine("Enter the room number to delete");
-    string? roomNumberInput = Console.ReadLine();
-    int roomNumber;
-    if (int.TryParse(roomNumberInput, out roomNumber))
-    {
+    var roomList = _roomRepository.RoomList();
+    List<string> list = new List<string>();
 
-    }
-    else
+    foreach (var room in roomList)
     {
-      Console.WriteLine("Invalid format, please enter a number");
+      list.Add($"RoomID: {room.RoomId}, Room Number: {room.RoomNumber}, Capacity: {room.Capacity}, Price Per Night: {room.PricePerNight}");
     }
-    _roomRepository.RoomRemoval(roomNumber);
+    
+    string[] menuRoom = list.ToArray();
+    int choice = ConsoleMenu.ShowMenu("All reservations:", menuRoom);
+
+    Console.WriteLine($"Selected Room: {menuRoom[choice]}");
+
+    Match matchRoomId = Regex.Match(menuRoom[choice], @"RoomID:\s*(\d+)");
+    int roomId = int.Parse(matchRoomId.Groups[1].Value);
+
+    _roomRepository.RoomRemoval(roomId);
   }
 
   private (int, int, int) RoomCreateEditUI()
