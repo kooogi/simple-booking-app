@@ -1,9 +1,15 @@
 # 🏨 Simple Booking App
 
-A console-based room reservation system built with C# and SQL Server, featuring an interactive menu interface and complete CRUD operations for rooms and reservations.
+[![.NET CI/CD Pipeline](https://github.com/kooogi/simple-booking-app/actions/workflows/dotnet.yml/badge.svg)](https://github.com/kooogi/simple-booking-app/actions/workflows/dotnet.yml)
+[![.NET Version](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
+[![Tests](https://img.shields.io/badge/tests-13%20passing-success)](tests/TESTING_GUIDE.md)
+[![License](https://img.shields.io/badge/license-Educational-blue)](LICENSE)
+
+A professional console-based room reservation system built with C# and SQL Server, featuring clean architecture, comprehensive testing, and automated CI/CD pipeline. Demonstrates enterprise-level design patterns and best practices.
 
 ## 📋 Table of Contents
 
+- [Key Highlights](#key-highlights)
 - [Features](#features)
 - [Technologies](#technologies)
 - [Prerequisites](#prerequisites)
@@ -14,6 +20,20 @@ A console-based room reservation system built with C# and SQL Server, featuring 
 - [Project Structure](#project-structure)
 - [Usage](#usage)
 - [Architecture](#architecture)
+- [Testing](#testing)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Security](#security-features)
+- [What I Learned](#what-i-learned)
+- [Future Enhancements](#future-enhancements)
+
+## 🌟 Key Highlights
+
+- ✅ **Clean Architecture** - Repository Pattern, Dependency Injection, SOLID principles
+- ✅ **Automated Testing** - 13 unit and integration tests with 100% pass rate
+- ✅ **CI/CD Pipeline** - GitHub Actions with build, test, and code quality checks
+- ✅ **Security First** - Parameterized SQL queries, transaction-based operations
+- ✅ **Professional Documentation** - Comprehensive README and testing guide
+- ✅ **Modern C#** - .NET 10.0 with nullable reference types and latest features
 
 ## ✨ Features
 
@@ -41,18 +61,32 @@ A console-based room reservation system built with C# and SQL Server, featuring 
 
 ## 🛠 Technologies
 
+### Core Stack
+
 - **Language:** C# / .NET 10.0
 - **Database:** Microsoft SQL Server (LocalDB/Express/Full)
-- **Libraries:**
+- **Architecture:** Repository Pattern, Dependency Injection, Layered Architecture
+
+### NuGet Packages
+
+- **Data Access:**
   - Microsoft.Data.SqlClient (6.1.2)
+- **Configuration:**
   - Microsoft.Extensions.Configuration (9.0.9)
   - Microsoft.Extensions.Configuration.Binder (9.0.9)
   - Microsoft.Extensions.Configuration.Json (9.0.9)
+- **Dependency Injection:**
   - Microsoft.Extensions.DependencyInjection (9.0.9)
 - **Testing:**
   - xUnit (3.0.0)
   - Moq (4.20.72)
   - Microsoft.NET.Test.Sdk (17.14.1)
+
+### Development Tools
+
+- **.editorconfig** - Consistent code formatting (2-space indentation)
+- **GitHub Actions** - Automated CI/CD pipeline
+- **dotnet format** - Code style enforcement
 
 ## 📦 Prerequisites
 
@@ -340,6 +374,44 @@ When you start the application, you'll see:
 - ✅ Error handling with rollback support
 - ✅ Cascade delete for referential integrity
 
+## 💡 What I Learned
+
+Building this project taught me several valuable software engineering concepts:
+
+### Architecture & Design
+
+- **Repository Pattern** - Separating data access from business logic for maintainability
+- **Dependency Injection** - Using IoC containers for loose coupling and testability
+- **SOLID Principles** - Single responsibility, interface segregation, dependency inversion
+- **Layered Architecture** - Proper separation of concerns across presentation, business, and data layers
+
+### Development Practices
+
+- **Unit Testing** - Writing testable code with mocking frameworks (Moq)
+- **Integration Testing** - Testing database operations with real connections
+- **CI/CD** - Automating build, test, and quality checks with GitHub Actions
+- **Code Quality** - Using EditorConfig and dotnet format for consistent code style
+
+### Technical Skills
+
+- **ADO.NET** - Raw SQL execution with parameterized queries
+- **Transaction Management** - Ensuring data consistency with SQL transactions
+- **Configuration Management** - Using appsettings.json and IConfiguration
+- **Error Handling** - Proper exception handling and user feedback
+
+### Database
+
+- **SQL Server** - Creating databases, tables, and relationships
+- **Foreign Keys** - CASCADE delete constraints for referential integrity
+- **Complex Queries** - Subqueries for availability checking with date overlaps
+
+### Key Takeaways
+
+- Clean architecture makes code easier to test and maintain
+- Automated testing catches bugs early and enables confident refactoring
+- CI/CD pipelines ensure code quality before it reaches production
+- Security (parameterized queries) must be built in from the start, not added later
+
 ## 🧪 Testing
 
 The project includes a comprehensive test suite with both unit and integration tests:
@@ -367,31 +439,106 @@ dotnet test
 
 For detailed testing information, see [TESTING_GUIDE.md](tests/TESTING_GUIDE.md).
 
+## 🚀 CI/CD Pipeline
+
+This project includes a complete CI/CD pipeline using GitHub Actions.
+
+### Pipeline Jobs
+
+1. **Build** - Compiles the solution in Release mode with caching
+2. **Test** - Runs all 13 tests with code coverage reporting
+3. **Code Quality** - Performs 4 automated checks:
+   - Code formatting validation (dotnet format)
+   - Security vulnerability scanning
+   - Code analysis (warnings as errors)
+   - Outdated package detection
+4. **PR Comments** - Automated test reports on pull requests
+5. **Release** - Publishes artifacts on main branch merges
+
+### Running the Pipeline
+
+The pipeline automatically triggers on:
+
+- Push to `main` branch
+- Pull requests to `main` branch
+- Manual workflow dispatch
+
+### Local Quality Checks
+
+Run the same checks locally:
+
+```bash
+# Format code
+dotnet format simple-booking-app.sln
+
+# Build
+dotnet build simple-booking-app.sln --configuration Release
+
+# Run tests
+dotnet test tests/BookingApp.Tests/BookingApp.Tests.csproj
+```
+
+See [.github/workflows/README.md](.github/workflows/README.md) for detailed pipeline documentation.
+
 ## 🚀 Future Enhancements
 
-- [ ] Add user authentication
-- [ ] Generate reservation invoices
-- [ ] Export data to CSV/PDF
-- [ ] Add search and filter capabilities
-- [ ] Implement logging system
-- [ ] Add configuration for different environments
-- [ ] Increase test coverage
-- [ ] Add CI/CD pipeline
+### Planned Improvements
+
+- [ ] **Async/Await** - Convert database operations to async for better performance
+- [ ] **Entity Framework Core** - Replace ADO.NET with modern ORM
+- [ ] **Logging** - Add ILogger for debugging and monitoring
+- [ ] **API Layer** - Add RESTful API endpoints with ASP.NET Core
+- [ ] **Docker Support** - Containerize application for easy deployment
+
+### Feature Ideas
+
+- [ ] User authentication and authorization
+- [ ] Email notifications for reservations
+- [ ] Payment processing integration
+- [ ] Reporting and analytics dashboard
+- [ ] Mobile/web frontend
+
+### Quality Improvements
+
+- [ ] Increase test coverage to 90%+
+- [ ] Add mutation testing
+- [ ] Performance benchmarking
+- [ ] Code coverage badges
 
 ## 👤 Author
 
 **kooogi**
 
 - GitHub: [@kooogi](https://github.com/kooogi)
+- Portfolio Project: Built to demonstrate professional software engineering skills
 
-## 📝 License
+## � Acknowledgments
+
+- Built with best practices from Microsoft's official .NET documentation
+- Testing patterns inspired by industry standards
+- CI/CD pipeline following GitHub Actions best practices
+
+## �📝 License
 
 This project is created for educational purposes.
 
 ## 🤝 Contributing
 
-This is a portfolio project. Feedback and suggestions are welcome!
+This is a portfolio project. Feedback and suggestions are welcome via issues or pull requests!
+
+### How to Contribute
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/improvement`)
+3. Make your changes with tests
+4. Run code formatting: `dotnet format simple-booking-app.sln`
+5. Ensure all tests pass: `dotnet test`
+6. Commit your changes (`git commit -m 'Add improvement'`)
+7. Push to the branch (`git push origin feature/improvement`)
+8. Open a Pull Request
 
 ---
 
-**Note:** This project was developed as part of an internship application portfolio to demonstrate C#, SQL Server, and software architecture skills.
+**Note:** This project was developed as part of an internship application portfolio to demonstrate proficiency in C#, SQL Server, software architecture, testing, and DevOps practices.
+
+**Tech Stack:** .NET 10.0 | C# | SQL Server | xUnit | Moq | GitHub Actions | Repository Pattern | Dependency Injection
