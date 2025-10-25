@@ -15,7 +15,7 @@ services.AddTransient<IRoomService, RoomService>();
 
 if (connectionString == null)
 {
-    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+  throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 }
 services.AddSingleton<IRoomRepository>(provider => new RoomRepository(connectionString));
 services.AddSingleton<IReservationRepository>(provider => new ReservationRepository(connectionString));
@@ -28,9 +28,9 @@ var roomService = serviceProvider.GetService<IRoomService>();
 
 if (connectionString == null)
 {
-    Console.WriteLine("Connection string 'DefaultConnection' not found.");
+  Console.WriteLine("Connection string 'DefaultConnection' not found.");
 }
 else
 {
-    MainModule.DisplayMenu();
+  MainModule.DisplayMenu();
 }
